@@ -23,6 +23,7 @@
             <p class="product-info" v-else-if="inventory > 10">In stock</p>
             <p class="product-info" v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
             <p class="product-info" v-else :class="{ productInfoOutOfStock: !inStock }">Out of stock</p>
+
             <ul>
                 <li v-for="detail in details">{{ detail }}</li>
             </ul>
@@ -39,6 +40,8 @@
             <ul>
                 <li v-for="sizes in sizes">{{ sizes }}</li>
             </ul>
+
+            <h2>{{ sale }}</h2>
 
             <button
                     v-on:click="addToCart"

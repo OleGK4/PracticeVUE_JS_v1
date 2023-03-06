@@ -8,7 +8,7 @@ let app = new Vue({
         brand: 'Вуе Ауе',
         selectedVariant: 0,
         altText: "ПАРА НАСКОВ",
-        inStock: false,
+        // inStock: false,
         inventory: 100,
         details: ['80% cotton', '20% polyester', 'Gender-neutral'],
         variants: [
@@ -16,13 +16,15 @@ let app = new Vue({
                 variantId: 2234,
                 variantColor: 'green',
                 variantImage: "./assets/vmSocks-green-onWhite.jpg",
-                variantQuantity: 10
+                variantQuantity: 10,
+                variantOnSale: true,
             },
             {
                 variantId: 2235,
                 variantColor: 'blue',
                 variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                variantQuantity: 0
+                variantQuantity: 0,
+                variantOnSale: false,
             }
         ],
 
@@ -52,10 +54,39 @@ let app = new Vue({
         },
         inStock(){
             return this.variants[this.selectedVariant].variantQuantity
+        },
+        sale() {
+            if (this.variants[this.selectedVariant].variantOnSale === true){
+                return ' ON SALE!'
+            }else {
+                return '';
+            }
         }
 
     }
 })
+
+Vue.component('product', {
+    template: `
+   <div class="product">
+
+   </div>
+ `,
+    data() {
+        return {
+            // тут будут данные
+        }
+    },
+    methods: {
+        // тут будут методы
+    },
+    computed: {
+        // тут будут вычисляемые свойства
+    }
+})
+
+
+
 
 // let app2 = new Vue({
 //
