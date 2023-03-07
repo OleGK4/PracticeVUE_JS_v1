@@ -1,5 +1,6 @@
 body {
     font-family: tahoma;
+    background-color: rgb(147, 189, 75);
     color:#282828;
     margin: 0px;
 }
@@ -25,6 +26,13 @@ img {
 
 .product-image {
     width: 80%;
+}
+.product-title{
+    width: max-content;
+    height: max-content;
+    display: flex;
+    position: relative;
+    flex-direction: row;
 }
 
 .product-image,

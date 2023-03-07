@@ -14,11 +14,16 @@ Vue.component('product', {
             <img alt="#" :src="image" :alt="altText"/>
         </div>
         <div class="product-info">
-            <h1>{{ title }}</h1>
+        <div class="product-title">
+            <h1 style="margin-top: 10px">{{ title }}</h1>
+            <span style="color: #ff8200; padding-left: 20px; font-size: 180%">{{ sale }}</span>
+        </div>            
+            <a :href="link">More products like this</a>
             <p class="product-info" v-if="inStock === false" :class="{ productInfoOutOfStock: !inStock }">Out of stock!</p>
             <p class="product-info" v-else-if="inventory > 10">In stock</p>
             <p class="product-info" v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
             <p class="product-info" v-else :class="{ productInfoOutOfStock: !inStock }">Out of stock</p>
+            <h4>Characteristics:</h4>
             <product-detail></product-detail>
             <p>Shipping: {{ shipping }}</p>
 
@@ -30,14 +35,10 @@ Vue.component('product', {
                  @mouseover="updateProduct(index)"
             >
             </div>
-
-            <ul>
+            <h4>Sizes:</h4>
+            <ul> 
                 <li v-for="sizes in sizes">{{ sizes }}</li>
             </ul>
-
-            <h2>{{ sale }}</h2>
-
-
             <button
                     v-on:click="addToCart"
                     :disabled="!inStock"
@@ -46,12 +47,20 @@ Vue.component('product', {
                 Add to cart
             </button>
             <button class="button-delete" v-on:click="delFromCart">Del from cart</button>
-
-         
-
-
-
         </div>
+   <product-review @review-submitted="addReview"></product-review>
+           <div>
+                <h2>Reviews</h2>
+                <p v-if="!reviews.length">There are no reviews yet.</p>
+                <ul>
+                  <li v-for="review in reviews">
+                  <p>{{ review.name }}</p>
+                  <p>Rating: {{ review.rating }}</p>
+                  <p>{{ review.review }}</p>
+                  </li>
+                </ul>
+            </div>
+
    </div>
  `,
     data() {
@@ -60,8 +69,12 @@ Vue.component('product', {
             brand: 'Вуе Ауе',
             selectedVariant: 0,
             altText: "ПАРА НАСКОВ",
+            link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
             // inStock: false,
             inventory: 100,
+            reviews: [], // OK
+
+
             variants: [
                 {
                     variantId: 2234,
@@ -78,10 +91,7 @@ Vue.component('product', {
                     variantOnSale: false,
                 }
             ],
-
-
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-            cart: []
         }
     },
     methods: {
@@ -93,9 +103,10 @@ Vue.component('product', {
         },
         updateProduct(index) {
             this.selectedVariant = index;
-            console.log(index);
         },
-
+        addReview(productReview) {
+            this.reviews.push(productReview)
+        },
     },
     computed: {
         title() {
@@ -125,6 +136,71 @@ Vue.component('product', {
 })
 
 
+Vue.component('product-review', {
+    template: `
+<form class="review-form" @submit.prevent="onSubmit">
+ <p>
+   <label for="name">Name:</label>
+   <input required id="name" v-model="name" placeholder="name">
+ </p>
+
+ <p>
+   <label for="review">Review:</label>
+   <textarea id="review" v-model="review"></textarea>
+ </p>
+
+ <p>
+   <label for="rating">Rating:</label>
+   <select id="rating" v-model.number="rating">
+     <option>5</option>
+     <option>4</option>
+     <option>3</option>
+     <option>2</option>
+     <option>1</option>
+   </select>
+ </p>
+<p v-if="errors.length">
+ <b>Please correct the following error(s):</b>
+ <ul>
+   <li v-for="error in errors">{{ error }}</li>
+ </ul>
+</p>
+
+ <p>
+   <input type="submit" value="Submit"> 
+ </p>
+
+</form>
+ `,
+    data() {
+        return {
+            name: null,
+            review: null,
+            rating: null,
+            errors: [],
+        }
+    },
+    methods: {
+        onSubmit() {
+            if(this.name && this.review && this.rating) {
+                let productReview = {
+                    name: this.name,
+                    review: this.review,
+                    rating: this.rating
+                }
+                this.$emit('review-submitted', productReview)
+                this.name = null
+                this.review = null
+                this.rating = null
+            } else {
+                if(!this.name) this.errors.push("Name required.")
+                if(!this.review) this.errors.push("Review required.")
+                if(!this.rating) this.errors.push("Rating required.")
+            }
+        },
+    }
+})
+
 Vue.component('product-detail', {
     data() {
         return {
@@ -132,17 +208,19 @@ Vue.component('product-detail', {
         }
     },
     template: `
-    <ul>
+    <ul> 
         <li v-for="detail in details">{{ detail }}</li>
     </ul>
     `,
 })
 
+
 let app = new Vue({
     el: '#app',
     data: {
         premium: true,
-        cart: []
+        cart: [],
+        // reviews: []
     },
     methods: {
         updateCart(id) {
