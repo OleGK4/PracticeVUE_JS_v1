@@ -13,70 +13,10 @@
 
 <body>
 <div id="app">
-    <div class="product">
-        <div class="product-image">
-            <img alt="#" :src="image" :alt="altText"/>
-        </div>
-        <div class="product-info">
-            <h1>{{ title }}</h1>
-            <p class="product-info" v-if="inStock === false" :class="{ productInfoOutOfStock: !inStock }">Out of stock!</p>
-            <p class="product-info" v-else-if="inventory > 10">In stock</p>
-            <p class="product-info" v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
-            <p class="product-info" v-else :class="{ productInfoOutOfStock: !inStock }">Out of stock</p>
-
-            <ul>
-                <li v-for="detail in details">{{ detail }}</li>
-            </ul>
-
-            <div
-                 class="color-box"
-                 v-for="(variant, index) in variants"
-                 :key="variant.variantId"
-                 :style="{ backgroundColor:variant.variantColor }"
-                 @mouseover="updateProduct(index)"
-            >
-            </div>
-
-            <ul>
-                <li v-for="sizes in sizes">{{ sizes }}</li>
-            </ul>
-
-            <h2>{{ sale }}</h2>
-
-
-            <button
-                    v-on:click="addToCart"
-                    :disabled="!inStock"
-                    :class="{ disabledButton: !inStock }"
-            >
-                Add to cart
-            </button>
-            <button class="button-delete" v-on:click="delFromCart">Del from cart</button>
-
-            <div class="cart">
-                <p>Cart({{ cart }})</p>
-            </div>
-
-
-
-        </div>
+    <div class="cart">
+        <p>Cart({{ cart }})</p>
     </div>
+    <product :premium="premium" @add-to-cart="updateCart" @del-from-cart="deleteFromCart"></product>
 </div>
-<!--<div id="app2">-->
-<!--    <div class="product">-->
-<!--        <div class="product-image">-->
-<!--            <img alt="#" :src="image" :alt="altText"/>-->
-<!--        </div>-->
-<!--        <div class="product-info">-->
-<!--            <h1>{{ product }}</h1>-->
-<!--            <p v-if="inventory > 10">In stock</p>-->
-<!--            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>-->
-<!--            <p v-else>Out of stock</p>-->
-<!--            <ul>-->
-<!--                <li v-for="detail in details">{{ detail }}</li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 </body>
 </html>
