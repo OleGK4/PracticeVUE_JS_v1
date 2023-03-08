@@ -45,6 +45,7 @@ img {
 }
 
 .color-box {
+    border-radius: 30px;
     display: flex;
     position: relative;
     width: 60px;
@@ -84,8 +85,18 @@ button {
 .disabledButton {
     background-color: #d8d8d8;
 }
+.radio-block {
+    display: flex;
+    width: 300px;
+    height: max-content;
+    position: relative;
+    flex-direction: row;
+}
 
 .review-form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
     width: 400px;
     padding: 20px;
     margin: 40px;
