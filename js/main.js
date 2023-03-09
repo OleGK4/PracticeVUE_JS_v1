@@ -7,6 +7,12 @@ Vue.component('product', {
             this.reviews.push(productReview)
         })
     },
+    mounted2() {
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
+    },
+
     props: {
         premium: {
             type: Boolean,
@@ -28,9 +34,6 @@ Vue.component('product', {
             <p class="product-info" v-else-if="inventory > 10">In stock</p>
             <p class="product-info" v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
             <p class="product-info" v-else :class="{ productInfoOutOfStock: !inStock }">Out of stock</p>
-            <h4>Characteristics:</h4>
-            <product-detail></product-detail>
-            <p>Shipping: {{ shipping }}</p>
 
             <div
                  class="color-box"
@@ -57,19 +60,6 @@ Vue.component('product', {
     
    <product-tabs :reviews="reviews"></product-tabs>
 
-<!--           <div>-->
-<!--                <h2>Reviews</h2>-->
-<!--                <p v-if="!reviews.length">There are no reviews yet.</p>-->
-<!--                <ul>-->
-<!--                  <li v-for="review in reviews">-->
-<!--                  <p>Name: {{ review.name }}</p>-->
-<!--                  <p>Rating: {{ review.rating }}</p>-->
-<!--                  <p>Review:{{ review.review }}</p>-->
-<!--                  <p>Choice: {{ review.choice }}</p>-->
-<!--                  </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-
    </div>
  `,
     data() {
@@ -79,9 +69,8 @@ Vue.component('product', {
             selectedVariant: 0,
             altText: "ПАРА НАСКОВ",
             link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
-            // inStock: false,
             inventory: 100,
-            reviews: [], // OK
+            reviews: [],
 
 
             variants: [
@@ -129,13 +118,6 @@ Vue.component('product', {
                 return ' ON SALE!'
             } else {
                 return '';
-            }
-        },
-        shipping() {
-            if (this.premium) {
-                return "Free";
-            } else {
-                return 2.99
             }
         },
     }
@@ -250,6 +232,13 @@ Vue.component('product-tabs', {
        <div v-show="selectedTab === 'Make a Review'">
          <product-review></product-review>
        </div>
+       <div v-show="selectedTab === 'Shipping'">
+                <product-shipping></product-shipping>
+        </div>
+        <div v-show="selectedTab === 'Details'">
+            <h4>Characteristics:</h4>
+            <product-detail></product-detail>
+        </div>
      </div>
 
 `,
@@ -261,6 +250,21 @@ Vue.component('product-tabs', {
     }
 })
 
+
+Vue.component('product-shipping', {
+    template: `
+     <p>Shipping: {{ shipping }}</p>
+    `,
+    computed: {
+        shipping() {
+            if (this.premium) {
+                return "Free";
+            } else {
+                return 2.99
+            }
+        },
+    }
+})
 
 
 Vue.component('product-detail', {
@@ -282,7 +286,6 @@ let app = new Vue({
     data: {
         premium: true,
         cart: [],
-        // reviews: []
     },
     methods: {
         updateCart(id) {
