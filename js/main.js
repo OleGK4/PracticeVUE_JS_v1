@@ -7,12 +7,6 @@ Vue.component('product', {
             this.reviews.push(productReview)
         })
     },
-    mounted2() {
-        eventBus.$on('review-submitted', productReview => {
-            this.reviews.push(productReview)
-        })
-    },
-
     props: {
         premium: {
             type: Boolean,
