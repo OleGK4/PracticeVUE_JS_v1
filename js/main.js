@@ -8,6 +8,9 @@ Vue.component('product', {
         eventBus.$on('review-submitted', productReview => {
             this.reviews.push(productReview)
         })
+        eventBus.$on('comment-submitted', comment => {
+            this.comments.push(comment)
+        })
     },
     props: {
         premium: {
@@ -54,7 +57,8 @@ Vue.component('product', {
         </div>
    
     
-   <product-tabs :reviews="reviews"></product-tabs>
+   <product-tabs :comments = "comments" :reviews="reviews" ></product-tabs>
+   
 
    </div>
  `,
@@ -67,6 +71,7 @@ Vue.component('product', {
             link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
             inventory: 100,
             reviews: [],
+            comments: [],
 
 
             variants: [
@@ -208,14 +213,14 @@ Vue.component('product-review', {
 Vue.component('review-comment', {
     template: `
     <form class="review-form" @submit.prevent="toSubmit">
-    <p>Ваш комментарий</p>
+    <p>Your comment down below</p>
      <p>
        <label for="name">Name:</label>
        <input required id="name" v-model="name" placeholder="name">
      </p>
     
      <p>
-       <label for="comment">Review:</label>
+       <label for="comment">Comment:</label>
        <textarea id="comment" v-model="comment"></textarea>
      </p>
      
@@ -234,14 +239,14 @@ Vue.component('review-comment', {
     },
     methods: {
         toSubmit() {
-            if(this.name && this.comment && this.rating && this.choice) {
-                let reviewComment = {
+            if(this.name && this.comment) {
+                let comment = {
                     name: this.name,
                     comment: this.comment,
                 }
-                // eventBus.$emit('review-submitted', productReview)
-                // this.name = null
-                // this.review = null
+                eventBus.$emit('comment-submitted', comment)
+                this.name = null
+                this.review = null
             } else {
                 if(!this.name) this.errors.push("Name required.")
                 if(!this.comment) this.errors.push("Comment required.")
@@ -259,7 +264,11 @@ Vue.component('product-tabs', {
         reviews: {
             type: Array,
             required: false
-        }
+        },
+        comments: {
+            type: Array,
+            required: false
+        },
     },
     template: `
      <div>   
@@ -272,18 +281,24 @@ Vue.component('product-tabs', {
        </ul>
        <div v-show="selectedTab === 'Reviews'">
          <p v-if="!reviews.length">There are no reviews yet.</p>
-         <ul>
+         <ul> 
            <li v-for="review in reviews">
               <p>Name: {{ review.name }}</p>
               <p>Rating: {{ review.rating }}</p>
-              <p>Review:{{ review.review }}</p>
+              <p>Review: {{ review.review }}</p>
               <p>Choice: {{ review.choice }}</p>
-           </li>
-
-           <div v-if="reviews.length">
-           <review-comment></review-comment>
-            </div>              
+           </li>      
          </ul>
+         <p v-if="!reviews.length">No comments on this review</p>
+           <div v-if="!comments.length && reviews.length">
+                <review-comment></review-comment>
+            </div>
+         <ul>
+             <li v-for="comment in comments">
+                 <p>Name: {{ comment.name }}</p>
+                 <p>Comment: {{ comment.comment }}</p>
+             </li>
+         </ul>   
        </div>
        <div v-show="selectedTab === 'Make a Review'">
          <product-review></product-review>
