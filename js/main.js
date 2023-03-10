@@ -9,7 +9,7 @@ Vue.component('product', {
             this.reviews.push(productReview)
         })
         eventBus.$on('comment-submitted', comment => {
-            this.comments.push(comment)
+            this.reviews.comments.push(comment)
         })
     },
     props: {
@@ -57,7 +57,7 @@ Vue.component('product', {
         </div>
    
     
-   <product-tabs :comments = "comments" :reviews="reviews" ></product-tabs>
+   <product-tabs :comments = "reviews.comments" :reviews="reviews" ></product-tabs>
    
 
    </div>
@@ -70,8 +70,15 @@ Vue.component('product', {
             altText: "ПАРА НАСКОВ",
             link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
             inventory: 100,
-            reviews: [],
-            comments: [],
+            reviews: [
+
+
+
+                {
+                comments: null,
+                }
+            ],
+            // comments: [],
 
 
             variants: [
@@ -281,24 +288,26 @@ Vue.component('product-tabs', {
        </ul>
        <div v-show="selectedTab === 'Reviews'">
          <p v-if="!reviews.length">There are no reviews yet.</p>
+         <p v-if="!comments.length">If there is a review, you can comment it!</p>
          <ul> 
            <li v-for="review in reviews">
               <p>Name: {{ review.name }}</p>
               <p>Rating: {{ review.rating }}</p>
               <p>Review: {{ review.review }}</p>
               <p>Choice: {{ review.choice }}</p>
-           </li>      
-         </ul>
-         <p v-if="!reviews.length">No comments on this review</p>
-           <div v-if="!comments.length && reviews.length">
-                <review-comment></review-comment>
-            </div>
+               
          <ul>
              <li v-for="comment in comments">
                  <p>Name: {{ comment.name }}</p>
                  <p>Comment: {{ comment.comment }}</p>
              </li>
          </ul>   
+           <div v-if="!comments.length<=5 && reviews.length">
+                <review-comment></review-comment>
+            </div>
+           </li>      
+         </ul>
+        
        </div>
        <div v-show="selectedTab === 'Make a Review'">
          <product-review></product-review>
