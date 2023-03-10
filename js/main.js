@@ -9,7 +9,7 @@ Vue.component('product', {
             this.reviews.push(productReview)
         })
         eventBus.$on('comment-submitted', comment => {
-            this.reviews.comments.push(comment)
+            this.comments.push(comment)
         })
     },
     props: {
@@ -57,7 +57,7 @@ Vue.component('product', {
         </div>
    
     
-   <product-tabs :comments = "reviews.comments" :reviews="reviews" ></product-tabs>
+   <product-tabs :comments="comments" :reviews="reviews" ></product-tabs>
    
 
    </div>
@@ -70,15 +70,8 @@ Vue.component('product', {
             altText: "ПАРА НАСКОВ",
             link: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=socks",
             inventory: 100,
-            reviews: [
-
-
-
-                {
-                comments: null,
-                }
-            ],
-            // comments: [],
+            reviews: [],
+            comments: [],
 
 
             variants: [
