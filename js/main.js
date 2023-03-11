@@ -40,7 +40,38 @@ Vue.component('product', {
                  :key="variant.variantId"
                  :style="{ backgroundColor:variant.variantColor }"
                  @mouseover="updateProduct(index)"
-            >
+            >            
+            </div>
+            <div>
+                <div
+                  class="drop-zone"
+                  @drop="onDrop($event, 1)"
+                  @dragover.prevent
+                  @dragenter.prevent
+                  >
+                  <div 
+                   v-for="item in listOne"
+                   :key="item.variantId"
+                   class="drag-el">
+                    {{ item.variantId }}
+                  </div>
+                </div>
+                <div         
+                  class="drop-zone"
+                  @drop="onDrop($event, 1)"
+                  @dragover.prevent
+                  @dragenter.prevent
+                  >
+                  <div
+                   class="drag-el"
+                   :key="item.variantId"
+                   v-for="item in listTwo"
+                   draggable
+                   @dragstart="startDrag($event, item)"
+                   > 
+                    {{ item.variantId }}
+                  </div>
+                </div>               
             </div>
             <h4>Sizes:</h4>
             <ul> 
@@ -85,7 +116,7 @@ Vue.component('product', {
                 },
                 {
                     variantId: 2235,
-                    variantList: 1,
+                    variantList: 2,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
                     variantQuantity: 10,
@@ -102,11 +133,27 @@ Vue.component('product', {
         delFromCart() {
             this.$emit('del-from-cart', this.variants[this.selectedVariant].variantId);
         },
+        startDrag(evt, item) {
+            evt.dataTransfer.dropEffect = 'move'
+            evt.dataTransfer.effectAllowed = 'move'
+            evt.dataTransfer.setData('productID', item.variantId)
+        },
+        onDrop(evt, list) {
+            const productID = evt.dataTransfer.getData('productID')
+            const item = this.variants.find((item) => item.variantId == productID)
+            item.variantList = list
+        },
         updateProduct(index) {
             this.selectedVariant = index;
         },
     },
     computed: {
+        listOne() {
+          return this.variants.filter((item) => item.variantList === 1)
+        },
+        listTwo() {
+            return this.variants.filter((item) => item.variantList === 2)
+        },
         title() {
             return this.brand + ' ' + this.product;
         },
@@ -171,7 +218,7 @@ Vue.component('product-review', {
         </div>
     </fieldset>
      <p>
-       <input type="submit" value="Submit"> 
+       <input type="submit" value="Submit">
      </p>
     
     </form>
