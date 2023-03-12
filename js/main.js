@@ -427,6 +427,11 @@ Vue.component('product-detail', {
 let app = new Vue({
 
     el: '#app',
+    mounted() {
+        eventBus.$on('ondrop-to-cart', list => {
+            this.cart.push(list)
+        })
+    },
     data: {
         premium: true,
         cart: [
