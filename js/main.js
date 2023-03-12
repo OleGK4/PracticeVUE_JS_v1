@@ -20,8 +20,20 @@ Vue.component('product', {
     },
     template: `
    <div class="product">
-    <div class="product-image">
-            <img alt="#" :src="image" :alt="altText"/>
+    <div 
+    class="product-image"    
+    >
+            <img 
+             @drop="onDrop($event, 1)"
+             @dragover.prevent
+             @dragenter.prevent 
+             @dragstart="startDrag($event, item)"
+             alt="#"
+             :src="image"
+             :alt="altText"
+             :key="id"
+              /> {{ id }}
+              
         </div>
         <div class="product-info">
         <div class="product-title">
@@ -40,7 +52,8 @@ Vue.component('product', {
                  :key="variant.variantId"
                  :style="{ backgroundColor:variant.variantColor }"
                  @mouseover="updateProduct(index)"
-            >            
+                 draggable
+            >{{ index }}          
             </div>
             <div>
                 <div
@@ -50,9 +63,12 @@ Vue.component('product', {
                   @dragenter.prevent
                   >
                   <div 
+                    class="drag-el"
                    v-for="item in listOne"
                    :key="item.variantId"
-                   class="drag-el">
+                   draggable
+                   @dragstart="startDrag($event, item)"
+                   >                   
                     {{ item.variantId }}
                   </div>
                 </div>
@@ -108,7 +124,7 @@ Vue.component('product', {
             variants: [
                 {
                     variantId: 2234,
-                    variantList: 1,
+                    variantList: 2,
                     variantColor: 'green',
                     variantImage: "./assets/vmSocks-green-onWhite.jpg",
                     variantQuantity: 10,
@@ -136,16 +152,21 @@ Vue.component('product', {
         startDrag(evt, item) {
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
-            evt.dataTransfer.setData('productID', item.variantId)
+            evt.dataTransfer.setData('variantId', item.variantId)
         },
         onDrop(evt, list) {
-            const productID = evt.dataTransfer.getData('productID')
+            const productID = evt.dataTransfer.getData('variantId')
             const item = this.variants.find((item) => item.variantId == productID)
-            item.variantList = list
+            this.$emit('ondrop-to-cart', item.variantList = list)
+            // item.variantList = list
         },
         updateProduct(index) {
             this.selectedVariant = index;
         },
+        // hello() {
+        //     this.array = ["hello"]
+        //     return array
+        // },
     },
     computed: {
         listOne() {
@@ -159,6 +180,9 @@ Vue.component('product', {
         },
         image() {
             return this.variants[this.selectedVariant].variantImage;
+        },
+        id() {
+            return this.selectedVariant;
         },
         inStock() {
             return this.variants[this.selectedVariant].variantQuantity
@@ -405,7 +429,17 @@ let app = new Vue({
     el: '#app',
     data: {
         premium: true,
-        cart: [],
+        cart: [
+            // {
+            // variantId: null,
+            // variantList: 2,
+            // variantColor: null,
+            // variantImage: null,
+            // variantQuantity: null,
+            // variantOnSale: true,
+            // },
+
+        ],
     },
     methods: {
         updateCart(id) {
