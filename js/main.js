@@ -34,41 +34,46 @@ Vue.component('product', {
               
         </div>
         <div class="product-info">
-        <div class="product-title">
-            <h1 style="margin-top: 10px">{{ title }}</h1>
-            <span style="color: #ff8200; padding-left: 20px; font-size: 180%">{{ sale }}</span>
-        </div>            
-            <a :href="link">More products like this</a>
-            <p class="product-info" v-if="inStock === false" :class="{ productInfoOutOfStock: !inStock }">Out of stock!</p>
-            <p class="product-info" v-else-if="inventory > 10">In stock</p>
-            <p class="product-info" v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
-            <p class="product-info" v-else :class="{ productInfoOutOfStock: !inStock }">Out of stock</p>
-
-            <div
-                 class="color-box"
-                 v-for="(variant, index) in variants"
-                 :key="variant.variantId"
-                 :style="{ backgroundColor:variant.variantColor }"
-                 @mouseover="updateProduct(index)"         
-            >{{ index }}          
+            <div>
+             <div class="product-title">
+                <h1 style="margin-top: 10px">{{ title }}</h1>
+                <span style="color: #ff8200; padding-left: 20px; font-size: 180%">{{ sale }}</span>
+            </div>            
+                <a :href="link">More products like this</a>
+                <p class="product-info" v-if="inStock === false" :class="{ productInfoOutOfStock: !inStock }">Out of stock!</p>
+                <p class="product-info" v-else-if="inventory > 10">In stock</p>
+                <p class="product-info" v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
+                <p class="product-info" v-else :class="{ productInfoOutOfStock: !inStock }">Out of stock</p>
+    
+                <div
+                     class="color-box"
+                     v-for="(variant, index) in variants"
+                     :key="variant.variantId"
+                     :style="{ backgroundColor:variant.variantColor }"
+                     @mouseover="updateProduct(index)"         
+                >{{ index }}          
+                </div>
+              
+                <h4>Sizes:</h4>
+                <ul> 
+                    <li v-for="sizes in sizes">{{ sizes }}</li>
+                </ul>
+                <button
+                        v-on:click="addToCart"
+                        :disabled="!inStock"
+                        :class="{ disabledButton: !inStock }"
+                >
+                    Add to cart
+                </button>
+                <button class="button-delete" v-on:click="delFromCart">Del from cart</button>       
             </div>
-          
-            <h4>Sizes:</h4>
-            <ul> 
-                <li v-for="sizes in sizes">{{ sizes }}</li>
-            </ul>
-            <button
-                    v-on:click="addToCart"
-                    :disabled="!inStock"
-                    :class="{ disabledButton: !inStock }"
-            >
-                Add to cart
-            </button>
-            <button class="button-delete" v-on:click="delFromCart">Del from cart</button>
+            <div>
+               <product-tabs :comments="comments" :reviews="reviews" ></product-tabs>            
+            </div>
         </div>
+        <p>You can drag it... into an actual... cart!</p>
    
     
-   <product-tabs :comments="comments" :reviews="reviews" ></product-tabs>
    
 
    </div>

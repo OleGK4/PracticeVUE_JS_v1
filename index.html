@@ -21,7 +21,7 @@
             @dragenter.prevent
     >
 
-        <p>Cart({{ cart }})</p>
+        <p>Cart({{ cart.length }})</p>
     </div>
     <product :premium="premium" @add-to-cart="updateCart" @del-from-cart="deleteFromCart"></product>
 </div>

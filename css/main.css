@@ -37,6 +37,9 @@ img {
 
 .product-image,
 .product-info {
+    display: flex;
+    position: relative;
+    flex-direction: row;
     margin-top: 10px;
     width: 50%;
 }
@@ -118,6 +121,8 @@ textarea {
 .tab {
     margin-left: 20px;
     cursor: pointer;
+    font-size: large;
+    font-weight: bold;
 }
 
 .activeTab {
