@@ -298,7 +298,7 @@ Vue.component('product-tabs', {
         },
     },
     template: `
-     <div>   
+     <div style="margin-top: 65px">   
        <ul>
          <span class="tab"
                :class="{ activeTab: selectedTab === tab }"
