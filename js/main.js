@@ -24,7 +24,6 @@ Vue.component('product', {
     class="product-image"    
     >
             <img 
-             @drop="onDrop($event, 1)"
              @dragover.prevent
              @dragenter.prevent 
              @dragstart="startDrag($event, selectedVariant)"
@@ -50,8 +49,7 @@ Vue.component('product', {
                  v-for="(variant, index) in variants"
                  :key="variant.variantId"
                  :style="{ backgroundColor:variant.variantColor }"
-                 @mouseover="updateProduct(index)"
-                 draggable
+                 @mouseover="updateProduct(index)"         
             >{{ index }}          
             </div>
           
@@ -405,9 +403,6 @@ let app = new Vue({
                 id = 2235;
             }
             this.cart.push(id)
-            // const item = this.variants.find((item) => item.variantId == productID)
-            // this.$emit('ondrop-to-cart', item.variantList = list)
-            // item.variantList = list
         },
     }
 })
