@@ -271,7 +271,7 @@ Vue.component('review-comment', {
                 }
                 eventBus.$emit('comment-submitted', comment)
                 this.name = null
-                this.review = null
+                this.comment = null
             } else {
                 if(!this.name) this.errors.push("Name required.")
                 if(!this.comment) this.errors.push("Comment required.")
