@@ -27,12 +27,11 @@ Vue.component('product', {
              @drop="onDrop($event, 1)"
              @dragover.prevent
              @dragenter.prevent 
-             @dragstart="startDrag($event, item)"
+             @dragstart="startDrag($event, selectedVariant)"
              alt="#"
              :src="image"
              :alt="altText"
-             :key="id"
-              /> {{ id }}
+              />
               
         </div>
         <div class="product-info">
@@ -55,40 +54,7 @@ Vue.component('product', {
                  draggable
             >{{ index }}          
             </div>
-            <div>
-                <div
-                  class="drop-zone"
-                  @drop="onDrop($event, 1)"
-                  @dragover.prevent
-                  @dragenter.prevent
-                  >
-                  <div 
-                    class="drag-el"
-                   v-for="item in listOne"
-                   :key="item.variantId"
-                   draggable
-                   @dragstart="startDrag($event, item)"
-                   >                   
-                    {{ item.variantId }}
-                  </div>
-                </div>
-                <div         
-                  class="drop-zone"
-                  @drop="onDrop($event, 1)"
-                  @dragover.prevent
-                  @dragenter.prevent
-                  >
-                  <div
-                   class="drag-el"
-                   :key="item.variantId"
-                   v-for="item in listTwo"
-                   draggable
-                   @dragstart="startDrag($event, item)"
-                   > 
-                    {{ item.variantId }}
-                  </div>
-                </div>               
-            </div>
+          
             <h4>Sizes:</h4>
             <ul> 
                 <li v-for="sizes in sizes">{{ sizes }}</li>
@@ -149,24 +115,15 @@ Vue.component('product', {
         delFromCart() {
             this.$emit('del-from-cart', this.variants[this.selectedVariant].variantId);
         },
-        startDrag(evt, item) {
+        startDrag(evt, selectedVariant) {
+            console.log(selectedVariant)
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
-            evt.dataTransfer.setData('variantId', item.variantId)
-        },
-        onDrop(evt, list) {
-            const productID = evt.dataTransfer.getData('variantId')
-            const item = this.variants.find((item) => item.variantId == productID)
-            this.$emit('ondrop-to-cart', item.variantList = list)
-            // item.variantList = list
+            evt.dataTransfer.setData('variantId', selectedVariant)
         },
         updateProduct(index) {
             this.selectedVariant = index;
         },
-        // hello() {
-        //     this.array = ["hello"]
-        //     return array
-        // },
     },
     computed: {
         listOne() {
@@ -180,9 +137,6 @@ Vue.component('product', {
         },
         image() {
             return this.variants[this.selectedVariant].variantImage;
-        },
-        id() {
-            return this.selectedVariant;
         },
         inStock() {
             return this.variants[this.selectedVariant].variantQuantity
@@ -329,7 +283,6 @@ Vue.component('review-comment', {
 
 
 
-
 Vue.component('product-tabs', {
     props: {
         reviews: {
@@ -434,17 +387,7 @@ let app = new Vue({
     },
     data: {
         premium: true,
-        cart: [
-            // {
-            // variantId: null,
-            // variantList: 2,
-            // variantColor: null,
-            // variantImage: null,
-            // variantQuantity: null,
-            // variantOnSale: true,
-            // },
-
-        ],
+        cart: [],
     },
     methods: {
         updateCart(id) {
@@ -452,10 +395,21 @@ let app = new Vue({
         },
         deleteFromCart(id) {
             this.cart.shift(id);
-        }
+        },
 
+        onDrop(evt, id) {
+            id = (evt.dataTransfer.getData('variantId'))
+            if(id == 0){
+                id = 2234;
+            }else if(id == 1){
+                id = 2235;
+            }
+            this.cart.push(id)
+            // const item = this.variants.find((item) => item.variantId == productID)
+            // this.$emit('ondrop-to-cart', item.variantList = list)
+            // item.variantList = list
+        },
     }
-
 })
 
 

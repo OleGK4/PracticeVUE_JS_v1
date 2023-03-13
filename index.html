@@ -19,14 +19,13 @@
             @drop="onDrop($event, 1)"
             @dragover.prevent
             @dragenter.prevent
-
             @ondrop-to-cart="updateCart"
 
     >
-        {{ hello }}
-        <p>Cart({{ cart.length }})</p>
+
+        <p>Cart({{ cart }})</p>
     </div>
-    <product :premium="premium" @add-to-cart="updateCart" @del-from-cart="deleteFromCart"></product>
+    <product :premium="premium" @add-to-cart="updateCart" @del-from-cart="deleteFromCart" draggable></product>
 </div>
 </body>
 </html>
