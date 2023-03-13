@@ -51,7 +51,7 @@ Vue.component('product', {
                      :key="variant.variantId"
                      :style="{ backgroundColor:variant.variantColor }"
                      @mouseover="updateProduct(index)"         
-                >{{ index }}          
+                >     
                 </div>
               
                 <h4>Sizes:</h4>

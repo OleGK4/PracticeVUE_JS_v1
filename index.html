@@ -20,8 +20,8 @@
             @dragover.prevent
             @dragenter.prevent
     >
-
-        <p>Cart({{ cart.length }})</p>
+        <p>Order list: </p>
+        <p v-for="order in cart">{{ order }}</p>
     </div>
     <product :premium="premium" @add-to-cart="updateCart" @del-from-cart="deleteFromCart"></product>
 </div>
